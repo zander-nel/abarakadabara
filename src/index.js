@@ -2,10 +2,9 @@ const fs = require("fs");
 const path = require("path");
 const { basicPlacement } = require("./planner");
 
-const levelData = require("../data/level1.json");
+const levelData = require("../data/level2.json");
 const resources = require("../data/resources.json");
 
-// Map resources by ID for fast access
 const resourcesMap = {};
 resources.resources.forEach(r => {
   resourcesMap[r.resource_id] = r;
@@ -13,16 +12,27 @@ resources.resources.forEach(r => {
 
 const result = basicPlacement(levelData, resourcesMap);
 
-const output = {
-  level: levelData.level,
-  zoo_size: levelData.zoo_size,
-  resources: levelData.resources,
-  zoo: result.zoo
-};
+const { level, zoo_size, resources: allowedResources } = levelData;
 
-fs.writeFileSync(
-  path.join(__dirname, "../output/level1-output.json"),
-  JSON.stringify(output, null, 2)
-);
+// 🧠 Pretty print the zoo array (square layout)
+function formatZoo(zoo) {
+  const rows = zoo.map(
+    row => "  [" + row.map(cell => String(cell).padStart(2)).join(", ") + "]"
+  );
+  return "[\n" + rows.join(",\n") + "\n]";
+}
 
-console.log("✅ Zoo planning complete. Output saved.");
+// 📝 Final output string (preserves structure)
+const output = `{
+  "level": ${level},
+  "zoo_size": "${zoo_size}",
+  "resources": [${allowedResources.join(", ")}],
+  "zoo": ${formatZoo(result.zoo)}
+}
+`;
+
+const outputPath = path.join(__dirname, "../output/level2-output.txt");
+
+fs.writeFileSync(outputPath, output);
+
+console.log("✅ Output written to:", outputPath);
