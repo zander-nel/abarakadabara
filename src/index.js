@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { basicPlacement } = require("./planner");
 
-const levelData = require("../data/level1.json");
+const levelData = require("../data/level2.json");
 const resources = require("../data/resources.json");
 
 const resourcesMap = {};
@@ -31,7 +31,7 @@ const output = `{
 }
 `;
 
-const outputPath = path.join(__dirname, "../output/level1-output.txt");
+const outputPath = path.join(__dirname, "../output/level2-output.txt");
 
 fs.writeFileSync(outputPath, output);
 
